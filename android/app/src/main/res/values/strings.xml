@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Presence Beacon</string>
+    <string name="title">Presence Beacon</string>
+    <string name="explainer">This phone advertises a Bluetooth identity. Your Mac detects it and locks when you walk away.</string>
+    <string name="identity_label">Your identity UUID — paste it into the Mac app:</string>
+    <string name="copy">Copy</string>
+    <string name="copied">Copied</string>
+    <string name="start">Start beacon</string>
+    <string name="stop">Stop beacon</string>
+    <string name="refresh">Refresh</string>
+    <string name="status_no_bluetooth">Bluetooth: not available</string>
+    <string name="status_bluetooth_off">Bluetooth: off</string>
+    <string name="status_ready">Bluetooth: ready</string>
+    <string name="beacon_broadcasting">Beacon: broadcasting ✓</string>
+    <string name="beacon_idle">Beacon: stopped</string>
+    <string name="beacon_starting">Beacon: starting…</string>
+    <string name="beacon_failed">Beacon: FAILED (%1$s)</string>
+    <string name="beacon_no_bluetooth">Beacon: needs Bluetooth</string>
+    <string name="notification_failed">Beacon FAILED — %1$s</string>
+    <string name="notification_stopped">Beacon stopped</string>
+    <string name="notification_failed_bt">Beacon needs Bluetooth</string>
+    <string name="notification_title">Beacon active</string>
+    <string name="notification_text">Broadcasting presence over BLE</string>
+    <string name="tx_power_label">Beacon TX power</string>
+    <string name="tx_power_hint">Low = shorter range but a sharper away-boundary (best for small spaces). Takes effect when you tap Start beacon again.</string>
+</resources>

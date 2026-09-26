@@ -1,0 +1,22 @@
+# macOS / Swift
+.build/
+DerivedData/
+*.xcodeproj/
+xcuserdata/
+
+# Android
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+*.apk
+*.aab
+
+# macOS bundle output
+dist/
+
+# OS
+.DS_Store
+# IDE
+.idea/
