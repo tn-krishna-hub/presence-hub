@@ -146,6 +146,7 @@ Android ships a JVM test for the advertisement packet budget (`AdvPacket`).
 
 ## Roadmap (ideas, not promises)
 
+- [ ] **Windows 10/11 Support**: Native Win32 background detector service using `LockWorkStation` & BLE GATT watcher (launching in the next few weeks!)
 - [ ] Secret token in manufacturer data (defence-in-depth)
 - [ ] ESP32 v2: drop-in battery-powered box with a fixed antenna position → room-level tuning
 - [ ] Export timeline to CSV for a "personal movement log"
