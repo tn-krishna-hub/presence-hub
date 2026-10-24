@@ -12,6 +12,7 @@ android/local.properties
 android/.idea/
 *.apk
 *.aab
+!docs/downloads/*.apk
 
 # macOS bundle output
 dist/
