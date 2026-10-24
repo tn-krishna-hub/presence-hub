@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Presence — Private, Zero-Cloud Walk-Away Screen Lock for Mac</title>
+  <title>Presence — Zero-Cloud BLE Walk-Away Screen Lock for Mac</title>
   <meta name="description" content="A private, zero-cloud BLE presence system. Your Android phone broadcasts an identity beacon; your Mac locks the moment you walk away.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -15,39 +15,28 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            sans: ['"Inter"', 'system-ui', 'sans-serif'],
+            display: ['"Space Grotesk"', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'monospace'],
           },
           colors: {
-            brand: {
-              50: '#eef8ff',
-              100: '#d8efff',
+            obsidian: {
+              950: '#03060a',
+              900: '#070b12',
+              850: '#0c121e',
+              800: '#111827',
+              700: '#1e293b',
+              600: '#334155',
+            },
+            electric: {
               400: '#38bdf8',
               500: '#0ea5e9',
               600: '#0284c7',
-              700: '#0369a1',
             },
-            surface: {
-              900: '#070a12',
-              850: '#0b101d',
-              800: '#0f172a',
-              750: '#15203b',
-              700: '#1e293b',
-            }
-          },
-          animation: {
-            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-            'ripple': 'ripple 2s linear infinite',
-            'radar': 'radar 3s linear infinite',
-          },
-          keyframes: {
-            ripple: {
-              '0%': { transform: 'scale(0.8)', opacity: '1' },
-              '100%': { transform: 'scale(2.4)', opacity: '0' },
-            },
-            radar: {
-              '0%': { transform: 'rotate(0deg)' },
-              '100%': { transform: 'rotate(360deg)' },
+            neon: {
+              emerald: '#10b981',
+              cyan: '#06b6d4',
+              purple: '#a855f7',
             }
           }
         }
@@ -55,291 +44,295 @@
     }
   </script>
   <style>
-    /* Custom Scrollbar & Glows */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #070a12; }
-    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #334155; }
-    
-    .glow-cyan {
-      box-shadow: 0 0 50px -10px rgba(14, 165, 233, 0.3);
+    /* Sleek Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #03060a; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
+
+    /* Metallic card border highlight */
+    .card-border {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(180deg, rgba(17, 24, 39, 0.65) 0%, rgba(12, 18, 30, 0.75) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
     }
-    .glow-border {
-      position: relative;
+    .card-border:hover {
+      border-color: rgba(56, 189, 248, 0.35);
+      box-shadow: 0 0 35px -8px rgba(14, 165, 233, 0.15);
     }
-    .glow-border::after {
-      content: '';
-      position: absolute;
-      inset: -1px;
-      border-radius: inherit;
-      padding: 1px;
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.4), rgba(255, 255, 255, 0.05), rgba(147, 51, 234, 0.2));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-    }
-    .glass-card {
-      background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-    .grid-pattern {
-      background-size: 40px 40px;
+
+    /* Subtle Mesh Grid */
+    .mesh-grid {
+      background-size: 48px 48px;
       background-image: 
-        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    }
+
+    /* Radar Ping Animation */
+    @keyframes radarPing {
+      0% { transform: scale(0.6); opacity: 0.9; }
+      100% { transform: scale(2.8); opacity: 0; }
+    }
+    .animate-radar-1 {
+      animation: radarPing 3s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+    }
+    .animate-radar-2 {
+      animation: radarPing 3s cubic-bezier(0, 0.2, 0.8, 1) 1s infinite;
+    }
+    .animate-radar-3 {
+      animation: radarPing 3s cubic-bezier(0, 0.2, 0.8, 1) 2s infinite;
     }
   </style>
 </head>
-<body class="bg-[#070a12] text-slate-100 font-sans antialiased selection:bg-brand-500 selection:text-white min-h-screen">
+<body class="bg-[#04070e] text-slate-100 font-sans antialiased selection:bg-electric-500 selection:text-white min-h-screen relative overflow-x-hidden">
 
-  <!-- Ambient Background Glows -->
+  <!-- Ambient Light Accents -->
   <div class="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-    <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-brand-500/15 blur-[140px] rounded-full"></div>
-    <div class="absolute top-[35%] -left-40 w-[500px] h-[500px] bg-indigo-600/10 blur-[150px] rounded-full"></div>
-    <div class="absolute top-[65%] -right-40 w-[600px] h-[600px] bg-cyan-500/10 blur-[160px] rounded-full"></div>
-    <div class="absolute inset-0 grid-pattern opacity-60"></div>
+    <div class="absolute -top-48 left-1/2 -translate-x-1/2 w-[850px] h-[550px] bg-gradient-to-b from-electric-500/20 via-cyan-500/10 to-transparent blur-[160px] rounded-full"></div>
+    <div class="absolute top-[40%] -left-64 w-[600px] h-[600px] bg-indigo-500/10 blur-[180px] rounded-full"></div>
+    <div class="absolute top-[70%] -right-64 w-[650px] h-[650px] bg-neon-cyan/10 blur-[190px] rounded-full"></div>
+    <div class="absolute inset-0 mesh-grid opacity-30"></div>
   </div>
 
-  <!-- Navigation -->
-  <header class="sticky top-0 z-50 glass-card border-b border-surface-700/60 transition-all duration-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-3 group">
-        <div class="relative w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-cyan-400 p-[1.5px] shadow-lg shadow-brand-500/20 group-hover:shadow-brand-500/40 transition-shadow">
-          <div class="w-full h-full bg-surface-900 rounded-[10px] flex items-center justify-center">
-            <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-            </svg>
-          </div>
-        </div>
-        <div>
-          <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">Presence</span>
-          <span class="text-[10px] uppercase font-mono tracking-wider ml-1 px-1.5 py-0.5 rounded bg-brand-500/10 text-brand-400 border border-brand-500/20">v1.0</span>
-        </div>
+  <!-- Floating Minimal Header (No Icon to the left of Presence) -->
+  <div class="sticky top-4 z-50 max-w-6xl mx-auto px-4 sm:px-6">
+    <header class="card-border rounded-2xl px-5 h-14 flex items-center justify-between shadow-2xl transition-all duration-300">
+      
+      <!-- Brand Title (Pure Typography, Icon Removed) -->
+      <a href="#" class="flex items-center gap-2 group">
+        <span class="font-display font-bold text-xl tracking-tight text-white group-hover:text-electric-400 transition-colors">
+          Presence
+        </span>
+        <span class="text-[10px] font-mono tracking-widest uppercase px-2 py-0.5 rounded-md bg-electric-500/15 text-electric-400 border border-electric-500/30">
+          v1.0
+        </span>
       </a>
 
-      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-        <a href="#how-it-works" class="hover:text-white transition-colors">How It Works</a>
-        <a href="#simulator" class="hover:text-white transition-colors">Interactive Demo</a>
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-7 text-xs uppercase tracking-wider font-medium text-slate-300">
+        <a href="#simulator" class="hover:text-white transition-colors">Live Demo</a>
         <a href="#features" class="hover:text-white transition-colors">Features</a>
-        <a href="#guide" class="hover:text-white transition-colors">Quickstart</a>
-        <a href="#comparison" class="hover:text-white transition-colors">Why Presence</a>
+        <a href="#architecture" class="hover:text-white transition-colors">Architecture</a>
+        <a href="#guide" class="hover:text-white transition-colors">Setup Guide</a>
+        <a href="#comparison" class="hover:text-white transition-colors">Compare</a>
       </nav>
 
+      <!-- Action Buttons -->
       <div class="flex items-center gap-3">
-        <a href="https://github.com/tn-krishna-hub/presence-hub" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white bg-surface-800 hover:bg-surface-750 border border-surface-700 transition">
-          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-          <span>Star on GitHub</span>
+        <a href="https://github.com/tn-krishna-hub/presence-hub" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-obsidian-850 hover:bg-obsidian-800 border border-white/10 transition">
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>GitHub</span>
         </a>
-        <a href="#downloads" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-semibold text-white bg-gradient-to-r from-brand-600 to-cyan-500 hover:from-brand-500 hover:to-cyan-400 shadow-md shadow-brand-500/20 transition-all hover:scale-[1.02]">
-          <span>Get Presence</span>
+        <a href="#downloads" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-electric-500 to-cyan-500 hover:from-electric-400 hover:to-cyan-400 shadow-lg shadow-electric-500/25 transition-all hover:scale-[1.02] active:scale-95">
+          <span>Downloads</span>
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
         </a>
       </div>
-    </div>
-  </header>
+    </header>
+  </div>
 
   <!-- Hero Section -->
-  <section class="relative pt-20 pb-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-    <div class="text-center max-w-4xl mx-auto">
-      
-      <!-- Announcement Badge -->
-      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-800/80 border border-brand-500/30 text-xs text-slate-300 mb-8 backdrop-blur shadow-inner">
-        <span class="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span class="font-medium text-brand-400">Zero Cloud • Zero Extra Hardware</span>
-        <span class="text-slate-600">|</span>
-        <span class="text-slate-400">Pure Local BLE Detection</span>
-      </div>
-
-      <!-- Main Headline -->
-      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.1] mb-6">
-        Your Mac locks itself the moment <br class="hidden sm:block"/>
-        <span class="bg-gradient-to-r from-brand-400 via-cyan-300 to-emerald-400 bg-clip-text text-transparent">you walk away with your phone</span>.
-      </h1>
-
-      <!-- Subtitle -->
-      <p class="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed mb-10">
-        A private, decentralized BLE proximity system. Your Android phone quietly emits an ephemeral identity beacon; your Mac monitors signal strength and suspends the screen automatically when you leave.
-      </p>
-
-      <!-- Primary Action Buttons -->
-      <div id="downloads" class="flex flex-wrap items-center justify-center gap-4 mb-14">
-        <!-- macOS Download -->
-        <a href="downloads/Presence-macOS.zip" download="Presence-macOS.zip" class="glow-border group relative inline-flex items-center gap-3 px-6 py-3.5 rounded-xl bg-surface-800 hover:bg-surface-750 text-white font-semibold text-sm transition-all duration-200 shadow-xl hover:shadow-brand-500/20 hover:-translate-y-0.5">
-          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white group-hover:bg-brand-500 transition-colors">
-            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.92-2.85-.9.04-2 .6-2.65 1.35-.58.67-1.09 1.74-.95 2.77.99.08 2.06-.52 2.68-1.27z"/></svg>
-          </div>
-          <div class="text-left">
-            <div class="text-[11px] text-slate-400 font-normal">Download Menu Bar App</div>
-            <div class="font-bold flex items-center gap-1.5">macOS 13+ <span class="text-xs text-brand-400 font-mono">(.zip • 230 KB)</span></div>
-          </div>
-        </a>
-
-        <!-- Android Download -->
-        <a href="downloads/Presence-Android.apk" download="Presence-Android.apk" class="glow-border group relative inline-flex items-center gap-3 px-6 py-3.5 rounded-xl bg-surface-800 hover:bg-surface-750 text-white font-semibold text-sm transition-all duration-200 shadow-xl hover:shadow-emerald-500/20 hover:-translate-y-0.5">
-          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white group-hover:bg-emerald-500 transition-colors">
-            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993.0001.5511-.4483.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.4116 13.8533 8.0833 12 8.0833s-3.5902.3283-5.1368.8664L4.8409 5.4467a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396"/></svg>
-          </div>
-          <div class="text-left">
-            <div class="text-[11px] text-slate-400 font-normal">Download Phone Beacon</div>
-            <div class="font-bold flex items-center gap-1.5">Android 9+ <span class="text-xs text-emerald-400 font-mono">(.apk • 2.4 MB)</span></div>
-          </div>
-        </a>
-      </div>
-
-      <!-- Quick Trust Indicators -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto pt-6 border-t border-surface-700/60 text-xs text-slate-400">
-        <div class="flex items-center justify-center gap-2">
-          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-          <span>No Cloud / No API Keys</span>
-        </div>
-        <div class="flex items-center justify-center gap-2">
-          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-          <span>No Auto-Unlock Security</span>
-        </div>
-        <div class="flex items-center justify-center gap-2">
-          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-          <span>Anti-Flap State Machine</span>
-        </div>
-        <div class="flex items-center justify-center gap-2">
-          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-          <span>100% Open Source</span>
-        </div>
-      </div>
-
+  <section class="relative pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center">
+    
+    <!-- Top Pill Announcement -->
+    <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full card-border text-xs text-slate-300 mb-8 shadow-sm">
+      <span class="flex h-2 w-2 rounded-full bg-neon-emerald animate-pulse"></span>
+      <span class="font-mono text-electric-400">Zero-Cloud Proximity Guard</span>
+      <span class="text-slate-600">•</span>
+      <span class="text-slate-400">Peer-to-Peer BLE Beacon</span>
     </div>
+
+    <!-- Main Headline -->
+    <h1 class="text-4xl sm:text-6xl lg:text-7xl font-display font-extrabold tracking-tight leading-[1.08] mb-6 max-w-4xl mx-auto">
+      Your Mac locks the second <br class="hidden sm:inline"/>
+      <span class="bg-gradient-to-r from-electric-400 via-cyan-300 to-neon-emerald bg-clip-text text-transparent">
+        you step away with your phone.
+      </span>
+    </h1>
+
+    <!-- Subtitle -->
+    <p class="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed mb-10">
+      No subscriptions, no cloud servers, no extra dongles. Your phone quietly emits a localized Bluetooth beacon; your Mac monitors real-time RSSI signal strength and secures your screen automatically.
+    </p>
+
+    <!-- Download Buttons -->
+    <div id="downloads" class="flex flex-wrap items-center justify-center gap-4 mb-12">
+      <!-- macOS Download Card -->
+      <a href="downloads/Presence-macOS.zip" download="Presence-macOS.zip" class="card-border group flex items-center gap-4 px-6 py-4 rounded-2xl text-left hover:-translate-y-0.5 transition duration-200 shadow-xl hover:shadow-electric-500/20">
+        <div class="w-10 h-10 rounded-xl bg-white/10 group-hover:bg-electric-500 flex items-center justify-center text-white transition-colors">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.92-2.85-.9.04-2 .6-2.65 1.35-.58.67-1.09 1.74-.95 2.77.99.08 2.06-.52 2.68-1.27z"/></svg>
+        </div>
+        <div>
+          <div class="text-[11px] font-mono text-slate-400">Detector Menu-Bar App</div>
+          <div class="font-bold text-sm text-white flex items-center gap-2">
+            macOS 13+
+            <span class="text-xs font-mono text-electric-400 bg-electric-500/10 px-1.5 py-0.5 rounded border border-electric-500/20">230 KB .zip</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Android Download Card -->
+      <a href="downloads/Presence-Android.apk" download="Presence-Android.apk" class="card-border group flex items-center gap-4 px-6 py-4 rounded-2xl text-left hover:-translate-y-0.5 transition duration-200 shadow-xl hover:shadow-neon-emerald/20">
+        <div class="w-10 h-10 rounded-xl bg-white/10 group-hover:bg-neon-emerald flex items-center justify-center text-white transition-colors">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993.0001.5511-.4483.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.4116 13.8533 8.0833 12 8.0833s-3.5902.3283-5.1368.8664L4.8409 5.4467a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396"/></svg>
+        </div>
+        <div>
+          <div class="text-[11px] font-mono text-slate-400">Phone Beacon Service</div>
+          <div class="font-bold text-sm text-white flex items-center gap-2">
+            Android 9+
+            <span class="text-xs font-mono text-neon-emerald bg-neon-emerald/10 px-1.5 py-0.5 rounded border border-neon-emerald/20">2.4 MB .apk</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Quick Terminal Clone Snippet -->
+    <div class="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-obsidian-900 border border-white/10 font-mono text-xs text-slate-400 max-w-lg mx-auto">
+      <span class="text-electric-400 font-bold">$</span>
+      <span class="truncate">git clone https://github.com/tn-krishna-hub/presence-hub.git</span>
+      <button onclick="copyCloneCmd(this)" class="ml-2 px-2 py-1 rounded bg-obsidian-800 hover:bg-obsidian-700 text-slate-300 text-[11px] border border-white/10 transition">Copy</button>
+    </div>
+
   </section>
 
-  <!-- Interactive Live Simulator Section -->
-  <section id="simulator" class="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-    <div class="text-center max-w-2xl mx-auto mb-12">
-      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-500/10 text-brand-400 border border-brand-500/20 text-xs font-mono uppercase tracking-wider mb-3">
-        Interactive Simulator
+  <!-- Interactive Live Simulator Console -->
+  <section id="simulator" class="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+    
+    <div class="text-center max-w-2xl mx-auto mb-10">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full card-border text-xs font-mono text-electric-400 uppercase tracking-widest mb-3">
+        Live Hardware Simulator
       </div>
-      <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Experience How Presence Locks</h2>
-      <p class="text-slate-400 mt-3 text-sm sm:text-base">
-        Drag the phone slider or choose a scenario. Watch how real-time RSSI signal strength, confirmation counts, and the debounce engine safely guard your workstation.
+      <h2 class="text-3xl sm:text-4xl font-display font-bold tracking-tight">Test the Anti-Flap State Machine</h2>
+      <p class="text-slate-400 text-sm mt-2">
+        Drag the phone range slider below. Notice how random signal jitter (±3 dB) is smoothed, and how the lock triggers decisively after confirmations.
       </p>
     </div>
 
-    <!-- Simulator Container -->
-    <div class="glass-card glow-border rounded-2xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+    <!-- Simulator Shell -->
+    <div class="card-border rounded-3xl p-6 sm:p-9 shadow-2xl relative overflow-hidden">
       
-      <!-- Top Status Bar -->
-      <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-surface-700/80">
+      <!-- Top Telemetry Ribbon -->
+      <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-white/10">
+        
         <div class="flex items-center gap-3">
-          <div id="sim-status-dot" class="w-3.5 h-3.5 rounded-full bg-emerald-400 animate-pulse"></div>
+          <div id="sim-status-dot" class="w-3.5 h-3.5 rounded-full bg-neon-emerald shadow-lg shadow-neon-emerald/50 animate-pulse"></div>
           <div>
-            <div class="text-xs uppercase font-mono tracking-wider text-slate-400">State Machine</div>
-            <div id="sim-state-text" class="text-lg font-bold text-emerald-400 tracking-wide">HOME (NEAR)</div>
+            <div class="text-[10px] font-mono uppercase tracking-wider text-slate-400">Current State</div>
+            <div id="sim-state-text" class="text-base sm:text-lg font-bold font-mono text-neon-emerald tracking-wide">HOME (ACTIVE)</div>
           </div>
         </div>
 
-        <div class="flex items-center gap-4 text-xs font-mono">
-          <div class="px-3 py-1.5 rounded-lg bg-surface-900/90 border border-surface-700">
-            <span class="text-slate-400">Threshold:</span> <span class="text-brand-400 font-semibold" id="sim-threshold-val">-80 dBm</span>
+        <div class="flex flex-wrap items-center gap-3 text-xs font-mono">
+          <div class="px-3 py-1.5 rounded-xl bg-obsidian-950 border border-white/10 flex items-center gap-2">
+            <span class="text-slate-400">Threshold:</span>
+            <span class="text-electric-400 font-bold" id="sim-threshold-val">-80 dBm</span>
           </div>
-          <div class="px-3 py-1.5 rounded-lg bg-surface-900/90 border border-surface-700">
-            <span class="text-slate-400">Away Confirms:</span> <span class="text-yellow-400 font-semibold" id="sim-confirms-val">0 / 3</span>
+          <div class="px-3 py-1.5 rounded-xl bg-obsidian-950 border border-white/10 flex items-center gap-2">
+            <span class="text-slate-400">Away Confirms:</span>
+            <span class="text-amber-400 font-bold" id="sim-confirms-val">0 / 3</span>
           </div>
-          <div class="px-3 py-1.5 rounded-lg bg-surface-900/90 border border-surface-700">
-            <span class="text-slate-400">Live RSSI:</span> <span class="text-cyan-300 font-semibold" id="sim-rssi-val">-52 dBm</span>
+          <div class="px-3 py-1.5 rounded-xl bg-obsidian-950 border border-white/10 flex items-center gap-2">
+            <span class="text-slate-400">Live RSSI:</span>
+            <span class="text-cyan-300 font-bold" id="sim-rssi-val">-50 dBm</span>
           </div>
+          <!-- Audio Toggle -->
+          <button id="sound-btn" onclick="toggleSound()" class="px-3 py-1.5 rounded-xl bg-obsidian-950 border border-white/10 hover:border-electric-500/50 text-slate-300 hover:text-white transition flex items-center gap-1.5">
+            <span id="sound-icon">🔔</span>
+            <span id="sound-text">Sound: On</span>
+          </button>
         </div>
+
       </div>
 
-      <!-- Visual Stage: Mac Laptop & Phone Proximity -->
+      <!-- Simulator Stage -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 my-8 items-center">
         
-        <!-- Mac Screen Simulation -->
+        <!-- Mac Mockup -->
         <div class="lg:col-span-5 flex flex-col items-center">
-          <div class="relative w-full max-w-[340px] aspect-[16/10] bg-surface-900 rounded-t-xl border-4 border-slate-700 p-2 shadow-2xl flex flex-col justify-between overflow-hidden transition-all duration-300" id="mac-frame">
-            <!-- Screen Content -->
-            <div id="mac-screen" class="relative w-full h-full bg-slate-950 rounded flex flex-col justify-between p-3 transition-all duration-300 overflow-hidden">
+          <div class="relative w-full max-w-[340px] aspect-[16/10] bg-obsidian-950 rounded-t-2xl border-4 border-slate-700 p-2 shadow-2xl flex flex-col justify-between overflow-hidden transition-all duration-300">
+            
+            <div id="mac-screen" class="relative w-full h-full bg-[#080c14] rounded-lg flex flex-col justify-between p-3.5 transition-all duration-300 overflow-hidden">
               
-              <!-- Active Desktop Simulation -->
+              <!-- Unlocked View -->
               <div id="mac-active-view" class="h-full flex flex-col justify-between transition-opacity duration-300">
-                <div class="flex justify-between items-center text-[10px] text-slate-400 border-b border-slate-800 pb-1 font-mono">
-                  <span> Presence App</span>
-                  <span>100% • 10:42 PM</span>
+                <div class="flex justify-between items-center text-[10px] text-slate-400 border-b border-white/10 pb-1.5 font-mono">
+                  <span> Presence Menu</span>
+                  <span class="text-neon-emerald flex items-center gap-1">● Beacon Active</span>
                 </div>
-                <div class="p-3 bg-surface-850/80 rounded border border-surface-700 text-left">
-                  <div class="flex items-center gap-2 mb-1.5">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                    <span class="text-xs font-semibold text-white">Workstation Active</span>
-                  </div>
-                  <p class="text-[10px] text-slate-400">Phone beacon in range. Scanner streaming RSSI samples.</p>
+                <div class="p-3 bg-obsidian-850/90 rounded-xl border border-white/10 text-left">
+                  <div class="text-xs font-semibold text-white mb-0.5">Workstation Unlocked</div>
+                  <div class="text-[10px] text-slate-400 font-mono">Continuous CoreBluetooth RSSI feed active</div>
                 </div>
-                <div class="text-[9px] text-slate-500 font-mono text-center">Screen Unlocked</div>
+                <div class="text-[9px] text-slate-500 font-mono text-center">Desk Range Safe</div>
               </div>
 
-              <!-- Locked Screen Overlay -->
-              <div id="mac-locked-view" class="absolute inset-0 bg-black/95 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10 p-4">
-                <div class="w-12 h-12 rounded-full bg-red-500/20 border border-red-500/40 flex items-center justify-center text-red-400 mb-2 animate-bounce">
+              <!-- Locked Overlay -->
+              <div id="mac-locked-view" class="absolute inset-0 bg-black/95 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-20 p-4">
+                <div class="w-12 h-12 rounded-2xl bg-red-500/20 border border-red-500/40 flex items-center justify-center text-red-400 mb-2.5">
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                 </div>
-                <div class="text-sm font-bold text-white tracking-wide">Mac Locked</div>
-                <p class="text-[10px] text-slate-400 text-center mt-1">Phone walked away. Screen suspended for privacy.</p>
-                <div class="mt-3 px-2 py-0.5 rounded bg-surface-800 text-[9px] font-mono text-slate-400 border border-surface-700">Touch ID / Password required</div>
+                <div class="text-sm font-bold text-white tracking-wide">Screen Suspended</div>
+                <p class="text-[10px] text-slate-400 text-center mt-1">Phone walked away. Locked via CGSession.</p>
+                <div class="mt-3 px-2.5 py-1 rounded bg-obsidian-850 text-[9px] font-mono text-slate-400 border border-white/10">Touch ID / Password to resume</div>
               </div>
 
             </div>
           </div>
-          <!-- Mac Base Stand -->
+          <!-- Laptop Aluminum Base -->
           <div class="w-full max-w-[380px] h-3 bg-slate-600 rounded-b-xl border-t border-slate-500 shadow-md"></div>
-          <div class="w-24 h-1 bg-slate-700 rounded-b mx-auto"></div>
-          <span class="text-xs font-medium text-slate-400 mt-2">Your Mac (Detector)</span>
+          <div class="w-20 h-1 bg-slate-700 rounded-b mx-auto"></div>
+          <span class="text-xs font-medium text-slate-400 mt-2">macOS Detector</span>
         </div>
 
-        <!-- Signal & Range Visualizer -->
+        <!-- Range Controls & Signal Waveform -->
         <div class="lg:col-span-7 flex flex-col justify-center space-y-6">
           
-          <!-- Distance Proximity Slider -->
+          <!-- Distance Slider -->
           <div>
-            <div class="flex justify-between items-center text-xs font-medium mb-2">
-              <span class="text-slate-300 flex items-center gap-1.5">
-                <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                Phone Proximity Distance
+            <div class="flex justify-between items-center text-xs font-medium mb-2.5">
+              <span class="text-slate-300 flex items-center gap-2">
+                <svg class="w-4 h-4 text-electric-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                Phone Distance Proximity
               </span>
-              <span id="slider-dist-label" class="font-mono text-brand-400 font-bold">Desk (0.5 m)</span>
+              <span id="slider-dist-label" class="font-mono text-electric-400 font-bold bg-electric-500/10 px-2 py-0.5 rounded border border-electric-500/20">Desk (0.4 m)</span>
             </div>
             
-            <input type="range" id="proximity-slider" min="1" max="100" value="15" class="w-full h-2.5 bg-surface-900 rounded-lg appearance-none cursor-pointer accent-brand-500 border border-surface-700 focus:outline-none">
+            <input type="range" id="proximity-slider" min="1" max="100" value="12" class="w-full h-2.5 bg-obsidian-950 rounded-lg appearance-none cursor-pointer accent-electric-400 border border-white/10 focus:outline-none">
             
-            <div class="flex justify-between text-[11px] font-mono text-slate-500 mt-1">
-              <span>Desk (-50 dBm)</span>
-              <span>Threshold Line (-80 dBm)</span>
-              <span>Hallway / Away (-95 dBm)</span>
+            <div class="flex justify-between text-[10px] font-mono text-slate-500 mt-2">
+              <span>Desk (-45 dBm)</span>
+              <span class="text-electric-400">Threshold (-80 dBm)</span>
+              <span>Corridor / Away (-98 dBm)</span>
             </div>
           </div>
 
           <!-- Signal Headroom Gauge -->
-          <div class="p-4 rounded-xl bg-surface-900/80 border border-surface-700/80 space-y-3">
-            <div class="flex justify-between text-xs">
+          <div class="p-4 rounded-2xl bg-obsidian-950/80 border border-white/10 space-y-2.5">
+            <div class="flex justify-between text-xs font-mono">
               <span class="text-slate-400">Signal Headroom</span>
-              <span id="headroom-label" class="font-mono font-semibold text-emerald-400">+28 dB (Safe)</span>
+              <span id="headroom-label" class="font-semibold text-neon-emerald">+30 dB (Safe)</span>
             </div>
-            <div class="w-full h-3 bg-surface-800 rounded-full overflow-hidden p-0.5 border border-surface-700">
-              <div id="headroom-bar" class="h-full bg-emerald-500 rounded-full transition-all duration-200" style="width: 85%;"></div>
+            <div class="w-full h-2.5 bg-obsidian-800 rounded-full overflow-hidden p-0.5 border border-white/5">
+              <div id="headroom-bar" class="h-full bg-neon-emerald rounded-full transition-all duration-200" style="width: 88%;"></div>
             </div>
-            <p id="headroom-explanation" class="text-xs text-slate-400 leading-snug">
-              Signal is well above the lock boundary. Mac stays unlocked and quiet.
+            <p id="headroom-explanation" class="text-xs text-slate-400">
+              Signal is well within bounds. Screen stays awake and active.
             </p>
           </div>
 
-          <!-- Scenario Buttons -->
+          <!-- Quick Scenario Toggles -->
           <div>
-            <div class="text-xs font-semibold text-slate-400 mb-2">Simulate Real Scenarios:</div>
-            <div class="grid grid-cols-3 gap-2">
-              <button onclick="setScenario('desk')" class="px-3 py-2 rounded-lg bg-surface-800 hover:bg-surface-750 border border-surface-700 text-xs font-medium text-slate-200 hover:text-white transition active:scale-95">
+            <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-2">Simulate Real Scenarios:</div>
+            <div class="grid grid-cols-3 gap-2.5">
+              <button onclick="setScenario('desk')" class="px-3 py-2.5 rounded-xl bg-obsidian-900 hover:bg-obsidian-800 border border-white/10 text-xs font-semibold text-slate-200 hover:text-white transition active:scale-95">
                 ☕ At Desk
               </button>
-              <button onclick="setScenario('leave')" class="px-3 py-2 rounded-lg bg-surface-800 hover:bg-surface-750 border border-surface-700 text-xs font-medium text-slate-200 hover:text-white transition active:scale-95">
-                🚪 Walk to Door
+              <button onclick="setScenario('leave')" class="px-3 py-2.5 rounded-xl bg-obsidian-900 hover:bg-obsidian-800 border border-white/10 text-xs font-semibold text-slate-200 hover:text-white transition active:scale-95">
+                🚪 Walk Away
               </button>
-              <button onclick="setScenario('stale')" class="px-3 py-2 rounded-lg bg-surface-800 hover:bg-surface-750 border border-surface-700 text-xs font-medium text-slate-200 hover:text-white transition active:scale-95">
-                📵 Silence (Drop BT)
+              <button onclick="setScenario('stale')" class="px-3 py-2.5 rounded-xl bg-obsidian-900 hover:bg-obsidian-800 border border-white/10 text-xs font-semibold text-slate-200 hover:text-white transition active:scale-95">
+                📵 Silence (BT Off)
               </button>
             </div>
           </div>
@@ -351,296 +344,269 @@
     </div>
   </section>
 
-  <!-- Core Features Section -->
-  <section id="features" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-    <div class="text-center max-w-3xl mx-auto mb-16">
-      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-500/10 text-brand-400 border border-brand-500/20 text-xs font-mono uppercase tracking-wider mb-3">
-        Built For Engineers & Power Users
+  <!-- Features Grid -->
+  <section id="features" class="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+    
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full card-border text-xs font-mono text-electric-400 uppercase tracking-widest mb-3">
+        Core Capabilities
       </div>
-      <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight">Engineered Without Shortcuts</h2>
-      <p class="text-slate-400 mt-4 text-base sm:text-lg">
-        Most proximity tools fail because Bluetooth signal naturally flutters by ±15 dB from body-blocking. Presence was designed from mathematics up to prevent false locks.
+      <h2 class="text-3xl sm:text-5xl font-display font-extrabold tracking-tight">Built For Engineers & Privacy Purists</h2>
+      <p class="text-slate-400 text-sm sm:text-base mt-3">
+        Engineered specifically to solve the limitations of standard Bluetooth proximity tools.
       </p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       
-      <!-- Feature Card 1 -->
-      <div class="glass-card glow-border rounded-2xl p-7 hover:-translate-y-1 transition duration-300">
-        <div class="w-12 h-12 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-400 mb-5">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+      <div class="card-border rounded-2xl p-7 hover:-translate-y-1 transition duration-200">
+        <div class="w-10 h-10 rounded-xl bg-electric-500/10 border border-electric-500/20 flex items-center justify-center text-electric-400 mb-5 font-mono font-bold">
+          01
         </div>
-        <h3 class="text-xl font-bold text-white mb-2">Zero Cloud & 100% Offline</h3>
+        <h3 class="text-lg font-bold text-white mb-2">Zero Cloud • Zero Telemetry</h3>
         <p class="text-sm text-slate-400 leading-relaxed">
-          No cloud relays, no tracking telemetry, no Wi-Fi credentials, and no external dependencies. The Bluetooth advertisement never leaves the physical room.
+          No external relays, no accounts, no Wi-Fi credentials required. All Bluetooth Low Energy advertisement stays completely local to your room.
         </p>
       </div>
 
-      <!-- Feature Card 2 -->
-      <div class="glass-card glow-border rounded-2xl p-7 hover:-translate-y-1 transition duration-300">
-        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-5">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+      <div class="card-border rounded-2xl p-7 hover:-translate-y-1 transition duration-200">
+        <div class="w-10 h-10 rounded-xl bg-neon-emerald/10 border border-neon-emerald/20 flex items-center justify-center text-neon-emerald mb-5 font-mono font-bold">
+          02
         </div>
-        <h3 class="text-xl font-bold text-white mb-2">No Auto-Unlock Guarantee</h3>
+        <h3 class="text-lg font-bold text-white mb-2">No Auto-Unlock Stance</h3>
         <p class="text-sm text-slate-400 leading-relaxed">
-          Security posture worth keeping: Presence locks your Mac on away, and informs you via local notification on return. It <em>never</em> bypasses your Touch ID or password.
+          Security policy worth keeping: Presence securely locks when you step away, and sends an optional desktop alert when you return. It never bypasses your macOS password.
         </p>
       </div>
 
-      <!-- Feature Card 3 -->
-      <div class="glass-card glow-border rounded-2xl p-7 hover:-translate-y-1 transition duration-300">
-        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-5">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+      <div class="card-border rounded-2xl p-7 hover:-translate-y-1 transition duration-200">
+        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-5 font-mono font-bold">
+          03
         </div>
-        <h3 class="text-xl font-bold text-white mb-2">Anti-Flap State Machine</h3>
+        <h3 class="text-lg font-bold text-white mb-2">Anti-Flap Confirmation Logic</h3>
         <p class="text-sm text-slate-400 leading-relaxed">
-          Single-sample RSSI spikes never trip a lock. Decisions require consecutive confirmation counts and stale timeouts, fully verified by pure unit tests.
+          Human bodies absorb ~15 dB of Bluetooth signal. Presence utilizes a unit-tested debounced state machine so you never get locked out while sitting and typing.
         </p>
       </div>
 
-      <!-- Feature Card 4 -->
-      <div class="glass-card glow-border rounded-2xl p-7 hover:-translate-y-1 transition duration-300">
-        <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 mb-5">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+      <div class="card-border rounded-2xl p-7 hover:-translate-y-1 transition duration-200">
+        <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 mb-5 font-mono font-bold">
+          04
         </div>
-        <h3 class="text-xl font-bold text-white mb-2">Short-Range Room Mode</h3>
+        <h3 class="text-lg font-bold text-white mb-2">Hostel & Small Space Mode</h3>
         <p class="text-sm text-slate-400 leading-relaxed">
-          In small apartments or hostel rooms, Bluetooth reaches through walls. One tap anchors the lock line ~10 dB under where you sit, locking within 1–2 meters.
+          In apartments or dorms, Bluetooth penetrates drywall easily. One-tap calibration anchors your lock threshold just 1–2 meters from your chair.
         </p>
       </div>
 
-      <!-- Feature Card 5 -->
-      <div class="glass-card glow-border rounded-2xl p-7 hover:-translate-y-1 transition duration-300">
-        <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-5">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <div class="card-border rounded-2xl p-7 hover:-translate-y-1 transition duration-200">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-5 font-mono font-bold">
+          05
         </div>
-        <h3 class="text-xl font-bold text-white mb-2">Non-Connectable Beacon</h3>
+        <h3 class="text-lg font-bold text-white mb-2">Non-Connectable Beacon</h3>
         <p class="text-sm text-slate-400 leading-relaxed">
-          Standard Bluetooth pairing stops RSSI reports. Presence uses non-connectable BLE beacons with <code class="text-xs font-mono text-amber-300">AllowDuplicates</code> to stream 10 Hz continuous signal updates.
+          Unlike standard Bluetooth pairing which throttles RSSI updates, Presence utilizes continuous non-connectable broadcast with <code class="text-xs font-mono text-amber-300">AllowDuplicates</code> at ~10 Hz.
         </p>
       </div>
 
-      <!-- Feature Card 6 -->
-      <div class="glass-card glow-border rounded-2xl p-7 hover:-translate-y-1 transition duration-300">
-        <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 mb-5">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+      <div class="card-border rounded-2xl p-7 hover:-translate-y-1 transition duration-200">
+        <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 mb-5 font-mono font-bold">
+          06
         </div>
-        <h3 class="text-xl font-bold text-white mb-2">CLI & Diagnostic Tooling</h3>
+        <h3 class="text-lg font-bold text-white mb-2">CLI Diagnostics Tooling</h3>
         <p class="text-sm text-slate-400 leading-relaxed">
-          Ships with <code class="text-xs font-mono text-blue-300">PresenceCLI</code> for real-time terminal RSSI dumps, histogram visualizers, and state transitions before trusting it with your screen.
+          Includes <code class="text-xs font-mono text-blue-300">PresenceCLI</code> for real-time terminal signal dump, RSSI histograms, and state testing before trusting it with your screen.
         </p>
       </div>
 
     </div>
+
   </section>
 
-  <!-- How It Works / Technical Architecture -->
-  <section id="how-it-works" class="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-    <div class="text-center max-w-3xl mx-auto mb-14">
-      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-mono uppercase tracking-wider mb-3">
-        Architecture
-      </div>
-      <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">How Presence Coordinates in Real Time</h2>
-      <p class="text-slate-400 mt-3 text-sm sm:text-base">
-        A seamless pipeline from phone hardware advertisement to low-level macOS session control.
-      </p>
-    </div>
-
-    <!-- Pipeline Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 relative">
-      
-      <!-- Step 1 -->
-      <div class="glass-card glow-border rounded-xl p-5 relative">
-        <div class="text-xs font-mono text-brand-400 mb-2">01 • Android FGS</div>
-        <h4 class="font-bold text-white mb-1">Beacon Service</h4>
-        <p class="text-xs text-slate-400">Foreground service advertises non-connectable UUID at ~10 Hz with low battery impact.</p>
-      </div>
-
-      <!-- Step 2 -->
-      <div class="glass-card glow-border rounded-xl p-5 relative">
-        <div class="text-xs font-mono text-cyan-400 mb-2">02 • CoreBluetooth</div>
-        <h4 class="font-bold text-white mb-1">Scanner Engine</h4>
-        <p class="text-xs text-slate-400">macOS scans with <code class="text-[10px] font-mono text-cyan-300">AllowDuplicates</code> to collect continuous per-packet RSSI numbers.</p>
-      </div>
-
-      <!-- Step 3 -->
-      <div class="glass-card glow-border rounded-xl p-5 relative">
-        <div class="text-xs font-mono text-emerald-400 mb-2">03 • Pure Logic</div>
-        <h4 class="font-bold text-white mb-1">State Machine</h4>
-        <p class="text-xs text-slate-400">Debounces noise, handles body-blocking shifts, and requires 3 confirmations or stale timeout.</p>
-      </div>
-
-      <!-- Step 4 -->
-      <div class="glass-card glow-border rounded-xl p-5 relative">
-        <div class="text-xs font-mono text-purple-400 mb-2">04 • macOS Lock</div>
-        <h4 class="font-bold text-white mb-1">Session Lock</h4>
-        <p class="text-xs text-slate-400">Calls <code class="text-[10px] font-mono text-purple-300">CGSession</code> or ScreenSaver lock to instantly suspend the active session.</p>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Quickstart Guide -->
-  <section id="guide" class="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+  <!-- Architecture Pipeline -->
+  <section id="architecture" class="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+    
     <div class="text-center max-w-2xl mx-auto mb-14">
-      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-mono uppercase tracking-wider mb-3">
-        3-Minute Setup
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full card-border text-xs font-mono text-cyan-400 uppercase tracking-widest mb-3">
+        Pipeline
       </div>
-      <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Get Up and Running</h2>
-      <p class="text-slate-400 mt-3 text-sm sm:text-base">
-        No server setup, no terminal commands required unless you want to calibrate manually.
+      <h2 class="text-3xl sm:text-4xl font-display font-bold tracking-tight">Under the Hood</h2>
+      <p class="text-slate-400 text-sm mt-2">
+        How packets travel from Android hardware to the macOS session controller.
       </p>
     </div>
 
-    <div class="space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="card-border rounded-2xl p-6">
+        <div class="text-xs font-mono text-electric-400 mb-1">Phase 1</div>
+        <h4 class="font-bold text-white mb-2">Android Foreground Service</h4>
+        <p class="text-xs text-slate-400 leading-relaxed">BeaconService broadcasts custom UUID via BLE Advertiser with low power consumption.</p>
+      </div>
+
+      <div class="card-border rounded-2xl p-6">
+        <div class="text-xs font-mono text-cyan-400 mb-1">Phase 2</div>
+        <h4 class="font-bold text-white mb-2">CoreBluetooth Scanner</h4>
+        <p class="text-xs text-slate-400 leading-relaxed">macOS receives ~10 Hz continuous RSSI packets without pairing requirement.</p>
+      </div>
+
+      <div class="card-border rounded-2xl p-6">
+        <div class="text-xs font-mono text-neon-emerald mb-1">Phase 3</div>
+        <h4 class="font-bold text-white mb-2">Presence State Machine</h4>
+        <p class="text-xs text-slate-400 leading-relaxed">Applies moving average filter, confirms consecutive away samples, and validates timeouts.</p>
+      </div>
+
+      <div class="card-border rounded-2xl p-6">
+        <div class="text-xs font-mono text-purple-400 mb-1">Phase 4</div>
+        <h4 class="font-bold text-white mb-2">Lock Controller</h4>
+        <p class="text-xs text-slate-400 leading-relaxed">Executes <code class="text-[10px] font-mono text-purple-300">CGSession -suspend</code> or screen-saver engine to protect the Mac.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Step-by-Step Setup -->
+  <section id="guide" class="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+    
+    <div class="text-center max-w-2xl mx-auto mb-14">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full card-border text-xs font-mono text-neon-emerald uppercase tracking-widest mb-3">
+        Quickstart
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-display font-bold tracking-tight">Up and Running in 3 Steps</h2>
+      <p class="text-slate-400 text-sm mt-2">
+        Everything you need to pair and configure Presence.
+      </p>
+    </div>
+
+    <div class="space-y-5">
       
-      <!-- Step 1 Card -->
-      <div class="glass-card glow-border rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 items-start">
-        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 font-mono font-bold flex items-center justify-center shrink-0 border border-emerald-500/20">
+      <div class="card-border rounded-2xl p-6 sm:p-7 flex gap-5 items-start">
+        <div class="w-9 h-9 rounded-xl bg-neon-emerald/10 text-neon-emerald font-mono font-bold flex items-center justify-center shrink-0 border border-neon-emerald/20 text-sm">
           1
         </div>
         <div class="flex-1">
-          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-            <h3 class="text-lg font-bold text-white">Install Beacon on Android Phone</h3>
-            <span class="text-xs font-mono text-emerald-400 px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20">Phone Companion</span>
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+            <h3 class="text-base font-bold text-white">Start the Beacon on Your Android Phone</h3>
+            <span class="text-[10px] font-mono text-neon-emerald px-2 py-0.5 rounded bg-neon-emerald/10 border border-neon-emerald/20">Android Companion</span>
           </div>
-          <p class="text-sm text-slate-400 mb-4">
-            Download and install <code class="font-mono text-xs text-slate-300">Presence-Android.apk</code>. Grant Bluetooth and Notification permissions, tap <strong>"Start beacon"</strong>, then tap <strong>Copy UUID</strong>.
+          <p class="text-xs sm:text-sm text-slate-400 leading-relaxed mb-3">
+            Install <a href="downloads/Presence-Android.apk" class="text-neon-emerald underline hover:text-white">Presence-Android.apk</a>, grant Bluetooth and Notification permissions, tap <strong>"Start beacon"</strong>, and tap <strong>"Copy UUID"</strong>.
           </p>
-          <div class="p-3 rounded-lg bg-surface-900 border border-surface-700 font-mono text-xs text-slate-400 flex items-center justify-between">
-            <span class="text-emerald-400">UUID: 3F9E2A84-17BD-49F1-8B6C-7A9B32015842</span>
-            <span class="text-[10px] text-slate-500">Example Identity</span>
-          </div>
         </div>
       </div>
 
-      <!-- Step 2 Card -->
-      <div class="glass-card glow-border rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 items-start">
-        <div class="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-400 font-mono font-bold flex items-center justify-center shrink-0 border border-brand-500/20">
+      <div class="card-border rounded-2xl p-6 sm:p-7 flex gap-5 items-start">
+        <div class="w-9 h-9 rounded-xl bg-electric-500/10 text-electric-400 font-mono font-bold flex items-center justify-center shrink-0 border border-electric-500/20 text-sm">
           2
         </div>
         <div class="flex-1">
-          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-            <h3 class="text-lg font-bold text-white">Launch Menu Bar App on Mac</h3>
-            <span class="text-xs font-mono text-brand-400 px-2 py-0.5 rounded bg-brand-500/10 border border-brand-500/20">macOS App</span>
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+            <h3 class="text-base font-bold text-white">Paste Identity in macOS Menu-Bar App</h3>
+            <span class="text-[10px] font-mono text-electric-400 px-2 py-0.5 rounded bg-electric-500/10 border border-electric-500/20">macOS App</span>
           </div>
-          <p class="text-sm text-slate-400 mb-3">
-            Download <code class="font-mono text-xs text-slate-300">Presence-macOS.zip</code>, extract <code class="font-mono text-xs text-slate-300">Presence.app</code>, and drag it into <code class="font-mono text-xs text-slate-300">/Applications</code>. Open it and allow Bluetooth permissions when prompted.
-          </p>
-          <p class="text-xs text-slate-400">
-            Open the menu-bar Presence icon → <strong>Settings → Identity</strong> → paste your phone's UUID.
+          <p class="text-xs sm:text-sm text-slate-400 leading-relaxed mb-3">
+            Extract <a href="downloads/Presence-macOS.zip" class="text-electric-400 underline hover:text-white">Presence-macOS.zip</a> into <code class="text-xs font-mono text-slate-300">/Applications</code>, launch it, click the menu-bar icon → <strong>Settings → Identity</strong>, and paste your UUID.
           </p>
         </div>
       </div>
 
-      <!-- Step 3 Card -->
-      <div class="glass-card glow-border rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 items-start">
-        <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 font-mono font-bold flex items-center justify-center shrink-0 border border-purple-500/20">
+      <div class="card-border rounded-2xl p-6 sm:p-7 flex gap-5 items-start">
+        <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 font-mono font-bold flex items-center justify-center shrink-0 border border-purple-500/20 text-sm">
           3
         </div>
         <div class="flex-1">
-          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-            <h3 class="text-lg font-bold text-white">One-Click Calibration (Short-Range Mode)</h3>
-            <span class="text-xs font-mono text-purple-400 px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/20">Tuning</span>
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+            <h3 class="text-base font-bold text-white">Calibrate Sitting Boundary</h3>
+            <span class="text-[10px] font-mono text-purple-400 px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/20">1-Click Tuning</span>
           </div>
-          <p class="text-sm text-slate-400 mb-3">
-            Sit naturally at your desk with your phone. In the menu-bar app, navigate to <strong>Settings → Tuning</strong> and click:
-          </p>
-          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-900 border border-brand-500/30 text-xs font-semibold text-brand-400">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-            "Set boundary where I'm sitting now"
-          </div>
-          <p class="text-xs text-slate-400 mt-3">
-            The lock threshold instantly anchors ~10 dB below your current sitting signal. When you walk 1–2 meters away, your Mac secures itself automatically.
+          <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+            Sit naturally at your desk with your phone in hand or pocket. In menu-bar settings, tap <strong>"Set boundary where I'm sitting now"</strong>. The threshold anchors safely ~10 dB below your desk signal.
           </p>
         </div>
       </div>
 
     </div>
+
   </section>
 
-  <!-- Comparison Section -->
+  <!-- Comparison Table -->
   <section id="comparison" class="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
     <div class="text-center max-w-2xl mx-auto mb-14">
-      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700 text-xs font-mono uppercase tracking-wider mb-3">
-        Comparison
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full card-border text-xs font-mono text-slate-400 uppercase tracking-widest mb-3">
+        Ecosystem Comparison
       </div>
-      <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">How Presence Compares</h2>
+      <h2 class="text-3xl sm:text-4xl font-display font-bold tracking-tight">Why Choose Presence</h2>
     </div>
 
-    <div class="overflow-x-auto glass-card glow-border rounded-2xl shadow-xl">
-      <table class="w-full text-left border-collapse text-sm">
+    <div class="overflow-x-auto card-border rounded-2xl shadow-2xl">
+      <table class="w-full text-left border-collapse text-xs sm:text-sm">
         <thead>
-          <tr class="border-b border-surface-700/80 bg-surface-900/60 font-mono text-xs">
+          <tr class="border-b border-white/10 bg-obsidian-950/80 font-mono text-xs">
             <th class="p-4 sm:p-5 text-slate-400">Feature</th>
-            <th class="p-4 sm:p-5 text-brand-400 font-bold">Presence</th>
+            <th class="p-4 sm:p-5 text-electric-400 font-bold">Presence</th>
             <th class="p-4 sm:p-5 text-slate-400">Apple Watch Auto-Unlock</th>
-            <th class="p-4 sm:p-5 text-slate-400">Smart Hub Ecosystems</th>
+            <th class="p-4 sm:p-5 text-slate-400">Commercial Smart Plugs</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-surface-700/60 text-slate-300 text-xs sm:text-sm">
+        <tbody class="divide-y divide-white/5 text-slate-300">
           <tr>
             <td class="p-4 sm:p-5 font-semibold text-white">Locks Screen on Away</td>
-            <td class="p-4 sm:p-5 text-emerald-400 font-semibold">✓ Yes, Instant</td>
-            <td class="p-4 sm:p-5 text-slate-400">✗ No (Only unlocks)</td>
-            <td class="p-4 sm:p-5 text-slate-400">Requires complex automations</td>
+            <td class="p-4 sm:p-5 text-neon-emerald font-semibold">✓ Yes, Instant</td>
+            <td class="p-4 sm:p-5 text-slate-500">✗ No (Only unlocks)</td>
+            <td class="p-4 sm:p-5 text-slate-400">Requires external automations</td>
           </tr>
           <tr>
-            <td class="p-4 sm:p-5 font-semibold text-white">Hardware Requirements</td>
-            <td class="p-4 sm:p-5 text-emerald-400 font-semibold">0 extra hardware (Built-in BT)</td>
+            <td class="p-4 sm:p-5 font-semibold text-white">Hardware Cost</td>
+            <td class="p-4 sm:p-5 text-neon-emerald font-semibold">0 extra hardware (Built-in BT)</td>
             <td class="p-4 sm:p-5 text-slate-400">Requires Apple Watch ($300+)</td>
-            <td class="p-4 sm:p-5 text-slate-400">Hubs, smart plugs, sensors</td>
+            <td class="p-4 sm:p-5 text-slate-400">Extra hubs & relays</td>
           </tr>
           <tr>
-            <td class="p-4 sm:p-5 font-semibold text-white">Privacy / Cloud Dependency</td>
-            <td class="p-4 sm:p-5 text-emerald-400 font-semibold">100% Local BLE (No Cloud)</td>
+            <td class="p-4 sm:p-5 font-semibold text-white">Cloud / Privacy</td>
+            <td class="p-4 sm:p-5 text-neon-emerald font-semibold">100% Offline BLE</td>
             <td class="p-4 sm:p-5 text-slate-400">iCloud Account required</td>
-            <td class="p-4 sm:p-5 text-slate-400">Cloud servers & telemetry</td>
+            <td class="p-4 sm:p-5 text-slate-400">Vendor cloud telemetry</td>
           </tr>
           <tr>
-            <td class="p-4 sm:p-5 font-semibold text-white">Tuning For Small Rooms</td>
-            <td class="p-4 sm:p-5 text-emerald-400 font-semibold">✓ Custom RSSI Boundary</td>
-            <td class="p-4 sm:p-5 text-slate-400">Fixed proximity distance</td>
-            <td class="p-4 sm:p-5 text-slate-400">Noisy floor-plan drift</td>
+            <td class="p-4 sm:p-5 font-semibold text-white">Small-Space Calibration</td>
+            <td class="p-4 sm:p-5 text-neon-emerald font-semibold">✓ Custom dBm Boundary</td>
+            <td class="p-4 sm:p-5 text-slate-500">✗ Fixed range</td>
+            <td class="p-4 sm:p-5 text-slate-500">✗ Floor-plan drift</td>
           </tr>
           <tr>
-            <td class="p-4 sm:p-5 font-semibold text-white">Source Availability</td>
-            <td class="p-4 sm:p-5 text-emerald-400 font-semibold">Open Source (Swift + Kotlin)</td>
-            <td class="p-4 sm:p-5 text-slate-400">Proprietary closed source</td>
-            <td class="p-4 sm:p-5 text-slate-400">Vendor lock-in</td>
+            <td class="p-4 sm:p-5 font-semibold text-white">Open Source</td>
+            <td class="p-4 sm:p-5 text-neon-emerald font-semibold">✓ Fully Open (Swift + Kotlin)</td>
+            <td class="p-4 sm:p-5 text-slate-500">✗ Closed proprietary</td>
+            <td class="p-4 sm:p-5 text-slate-500">✗ Vendor lock-in</td>
           </tr>
         </tbody>
       </table>
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="border-t border-surface-700/80 bg-surface-900/90 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+  <!-- Clean Footer (No Icon to the left of Presence) -->
+  <footer class="border-t border-white/10 bg-obsidian-950 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
       
-      <div class="flex items-center gap-3">
-        <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-brand-600 to-cyan-400 flex items-center justify-center text-white">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-        </div>
-        <span class="font-bold text-slate-200">Presence</span>
-        <span class="text-xs text-slate-500 font-mono">by Krishna Dhanokar</span>
+      <div>
+        <div class="font-display font-bold text-lg text-white">Presence</div>
+        <div class="text-xs text-slate-500 font-mono mt-0.5">Designed & built by Krishna Dhanokar</div>
       </div>
 
-      <div class="flex items-center gap-6 text-xs text-slate-400">
+      <div class="flex flex-wrap items-center justify-center gap-6 text-xs text-slate-400">
         <a href="https://github.com/tn-krishna-hub/presence-hub" target="_blank" rel="noopener noreferrer" class="hover:text-white transition">GitHub Repository</a>
         <a href="https://github.com/tn-krishna-hub" target="_blank" rel="noopener noreferrer" class="hover:text-white transition">Developer Profile</a>
-        <a href="downloads/Presence-macOS.zip" download class="hover:text-brand-400 transition">macOS (.zip)</a>
-        <a href="downloads/Presence-Android.apk" download class="hover:text-emerald-400 transition">Android (.apk)</a>
+        <a href="downloads/Presence-macOS.zip" download class="hover:text-electric-400 transition">macOS App (.zip)</a>
+        <a href="downloads/Presence-Android.apk" download class="hover:text-neon-emerald transition">Android Companion (.apk)</a>
       </div>
 
       <div class="text-xs text-slate-500 font-mono">
-        MIT License • Peer-to-Peer Privacy
+        MIT License • 100% Peer-to-Peer
       </div>
 
     </div>
   </footer>
 
-  <!-- Simulator Interactive Logic -->
+  <!-- Simulator Scripts with Synthesized Lock Audio -->
   <script>
     const slider = document.getElementById('proximity-slider');
     const sliderDistLabel = document.getElementById('slider-dist-label');
@@ -651,16 +617,51 @@
     const headroomLabel = document.getElementById('headroom-label');
     const headroomBar = document.getElementById('headroom-bar');
     const headroomExp = document.getElementById('headroom-explanation');
-    const macScreen = document.getElementById('mac-screen');
     const macActiveView = document.getElementById('mac-active-view');
     const macLockedView = document.getElementById('mac-locked-view');
+    const soundBtn = document.getElementById('sound-btn');
+    const soundIcon = document.getElementById('sound-icon');
+    const soundText = document.getElementById('sound-text');
 
     const THRESHOLD = -80;
     const CONFIRM_REQUIRED = 3;
     let awayConfirmCount = 0;
     let homeConfirmCount = 0;
-    let currentState = 'HOME'; // 'HOME' or 'AWAY'
+    let currentState = 'HOME';
     let isStale = false;
+    let soundEnabled = true;
+
+    // Web Audio synthesizer for Mac Lock sound
+    function playLockSound() {
+      if (!soundEnabled) return;
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(420, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.09);
+        gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.09);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.09);
+      } catch(e) {}
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      soundIcon.textContent = soundEnabled ? '🔔' : '🔕';
+      soundText.textContent = soundEnabled ? 'Sound: On' : 'Sound: Off';
+    }
+
+    function copyCloneCmd(btn) {
+      navigator.clipboard.writeText('git clone https://github.com/tn-krishna-hub/presence-hub.git');
+      const original = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = original, 2000);
+    }
 
     function updateSimulation(rawDistancePercent, overrideRssi = null) {
       let rssi;
@@ -670,7 +671,6 @@
         rssi = overrideRssi;
         distMeters = "Signal Dropped";
       } else {
-        // Map slider 1..100 to RSSI -45 dBm to -98 dBm with small random jitter
         const jitter = (Math.random() * 2 - 1).toFixed(1);
         rssi = Math.round(-45 - (rawDistancePercent / 100) * 53 + parseFloat(jitter));
         distMeters = (0.2 + (rawDistancePercent / 100) * 12).toFixed(1) + ' m';
@@ -686,20 +686,21 @@
       headroomBar.style.width = barWidth + '%';
 
       if (headroom >= 10) {
-        headroomBar.className = 'h-full bg-emerald-500 rounded-full transition-all duration-200';
-        headroomLabel.className = 'font-mono font-semibold text-emerald-400';
+        headroomBar.className = 'h-full bg-neon-emerald rounded-full transition-all duration-200';
+        headroomLabel.className = 'font-semibold text-neon-emerald';
         headroomExp.textContent = "Signal is strong. Well above threshold. Mac stays unlocked and quiet.";
       } else if (headroom >= 0) {
-        headroomBar.className = 'h-full bg-amber-500 rounded-full transition-all duration-200';
-        headroomLabel.className = 'font-mono font-semibold text-amber-400';
-        headroomExp.textContent = "Phone is close to the lock boundary. Small movements may trigger debounce.";
+        headroomBar.className = 'h-full bg-amber-400 rounded-full transition-all duration-200';
+        headroomLabel.className = 'font-semibold text-amber-400';
+        headroomExp.textContent = "Phone is close to the lock boundary. State machine is monitoring.";
       } else {
         headroomBar.className = 'h-full bg-red-500 rounded-full transition-all duration-200';
-        headroomLabel.className = 'font-mono font-semibold text-red-400';
+        headroomLabel.className = 'font-semibold text-red-400';
         headroomExp.textContent = "Signal is below threshold. State machine confirms trip before locking.";
       }
 
       // State machine logic
+      const prevState = currentState;
       if (rssi < THRESHOLD || isStale) {
         homeConfirmCount = 0;
         if (currentState === 'HOME') {
@@ -722,25 +723,30 @@
 
       simConfirmsVal.textContent = `${awayConfirmCount} / ${CONFIRM_REQUIRED}`;
 
+      // Trigger lock sound on transition to AWAY
+      if (prevState === 'HOME' && currentState === 'AWAY') {
+        playLockSound();
+      }
+
       // Update Visuals
       if (currentState === 'AWAY') {
         simStateText.textContent = 'AWAY (LOCKED 🔒)';
-        simStateText.className = 'text-lg font-bold text-red-400 tracking-wide';
-        simStatusDot.className = 'w-3.5 h-3.5 rounded-full bg-red-400';
+        simStateText.className = 'text-base sm:text-lg font-bold font-mono text-red-400 tracking-wide';
+        simStatusDot.className = 'w-3.5 h-3.5 rounded-full bg-red-400 shadow-lg shadow-red-500/50';
         
         macActiveView.classList.add('opacity-0');
         macLockedView.classList.remove('opacity-0', 'pointer-events-none');
       } else if (awayConfirmCount > 0) {
         simStateText.textContent = `CONFIRMING LEAVE (${awayConfirmCount}/${CONFIRM_REQUIRED})`;
-        simStateText.className = 'text-lg font-bold text-amber-400 tracking-wide';
-        simStatusDot.className = 'w-3.5 h-3.5 rounded-full bg-amber-400 animate-ping';
+        simStateText.className = 'text-base sm:text-lg font-bold font-mono text-amber-400 tracking-wide';
+        simStatusDot.className = 'w-3.5 h-3.5 rounded-full bg-amber-400 shadow-lg shadow-amber-500/50 animate-ping';
 
         macActiveView.classList.remove('opacity-0');
         macLockedView.classList.add('opacity-0', 'pointer-events-none');
       } else {
-        simStateText.textContent = 'HOME (UNLOCKED)';
-        simStateText.className = 'text-lg font-bold text-emerald-400 tracking-wide';
-        simStatusDot.className = 'w-3.5 h-3.5 rounded-full bg-emerald-400 animate-pulse';
+        simStateText.textContent = 'HOME (ACTIVE)';
+        simStateText.className = 'text-base sm:text-lg font-bold font-mono text-neon-emerald tracking-wide';
+        simStatusDot.className = 'w-3.5 h-3.5 rounded-full bg-neon-emerald shadow-lg shadow-neon-emerald/50 animate-pulse';
 
         macActiveView.classList.remove('opacity-0');
         macLockedView.classList.add('opacity-0', 'pointer-events-none');
@@ -755,12 +761,11 @@
     function setScenario(type) {
       if (type === 'desk') {
         isStale = false;
-        slider.value = 15;
-        updateSimulation(15);
+        slider.value = 12;
+        updateSimulation(12);
       } else if (type === 'leave') {
         isStale = false;
         slider.value = 85;
-        // Step through confirmations
         awayConfirmCount = 0;
         currentState = 'HOME';
         updateSimulation(85);
@@ -773,8 +778,8 @@
       }
     }
 
-    // Initialize
-    updateSimulation(15);
+    // Initialize default simulation
+    updateSimulation(12);
   </script>
 </body>
 </html>
